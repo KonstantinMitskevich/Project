@@ -1,5 +1,4 @@
 C:\Users\Exim\Documents\Visual Studio 2013\Projects\С#\project\project\bin\Debug\project.exe.config
-C:\Users\Exim\Documents\Visual Studio 2013\Projects\С#\project\project\obj\Debug\project.csprojResolveAssemblyReference.cache
 C:\Users\Exim\Documents\Visual Studio 2013\Projects\С#\project\project\bin\Debug\project.exe
 C:\Users\Exim\Documents\Visual Studio 2013\Projects\С#\project\project\bin\Debug\project.pdb
 C:\Users\Exim\Documents\Visual Studio 2013\Projects\С#\project\project\obj\Debug\project.exe

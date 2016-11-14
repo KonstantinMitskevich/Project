@@ -10,6 +10,15 @@ namespace project
     {
         string name;
         int id;
+
+        public Client() { }
+
+        public Client(string name, int id)
+        {
+            this.name = name;
+            this.id = id;
+        }
+
         public string Name
         {
             get { return name; }
@@ -27,12 +36,12 @@ namespace project
             {
                 if (value.ToString().Length >= 4)
                     id = value;
-                else throw new Exception("Id должен содеражать более 4 символов");
+                else throw new Exception("Id должен содеражать более 3 символов");
             }
         }
         public override string ToString()
         {
-            return string.Format("Имя: " + Name + " Id: " + ID);
+            return string.Format(Name + " " + ID);
         }
     }
 }

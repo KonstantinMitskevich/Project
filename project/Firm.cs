@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace project
 {
@@ -11,7 +12,6 @@ namespace project
         public List<Client> clients = new List<Client>();
         public List<Tarif> tarifs = new List<Tarif>();
         public List<Order> orders = new List<Order>();
-
         public void ClientRegister(List<Client> clients) // регистрация в системе
         {
             Client client = new Client();
@@ -38,6 +38,11 @@ namespace project
                 }
             }
             clients.Add(client);
+            FileStream fs = new FileStream(Program.pathClients, FileMode.Append);
+            using (StreamWriter sw = new StreamWriter(fs, Encoding.Default))
+            {
+                sw.WriteLine(client);
+            }
             Console.WriteLine("Регистрация прошла успешно!");
             Console.ReadLine();
         }
@@ -59,11 +64,14 @@ namespace project
         public void ShowOrders(List<Order> orders, Client client)// вывод заказов клиента
         {
             int i = 1;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("№  Направление  Вес груза(кг)  цена");
+            Console.ResetColor();
             foreach (Order order in orders)
             {
                 if (order.ClientId.Equals(client.ID))
                 {
-                    Console.WriteLine(i++ + ". " + order);
+                    Console.WriteLine(i++ + ". " + order.Destination + "     " + order.CargoWeight + "      " + order.Price);
                 }
             }
             Console.ReadLine();
@@ -74,8 +82,6 @@ namespace project
             Console.WriteLine("Доступные тарифы:");
             ShowTarifs(tarifs);
             Order order = new Order();
-            Console.WriteLine();
-
             Console.WriteLine("Введите направление из имеющихся тарифов");
             string destinationName = Console.ReadLine();
             bool flag = false;
@@ -89,12 +95,26 @@ namespace project
                     order.Price = t.Price;
 
                     Console.WriteLine("Введите вес груза");
-                    order.CargoWeight = double.Parse(Console.ReadLine());
+                    try
+                    {
+                        order.CargoWeight = double.Parse(Console.ReadLine());
+                    }
+                    catch{
+                        Console.WriteLine("Неверный формат");
+                        Console.ReadLine();
+                        return;
+                    }
                     if (order.CargoWeight > 2000)
                         order.Price = order.getProcDisount();
                     else
                         order.Price = order.getFixedDiscount();
                     orders.Add(order);
+
+                    FileStream fs = new FileStream(Program.pathOrders, FileMode.Append);
+                    using (StreamWriter sw = new StreamWriter(fs, Encoding.Default))
+                    {
+                        sw.WriteLine(order);
+                    }
 
                     flag = true;
                     Console.WriteLine("Ваш заказ оформлен!");
@@ -117,9 +137,12 @@ namespace project
                 Console.WriteLine("Список тарифов пуст.");
                 return;
             }
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Направление  цена(руб.)");
+            Console.ResetColor();
             foreach (Tarif tarif in tarifs)
             {
-                Console.WriteLine(tarif);
+                Console.WriteLine("{0,10} {1,10} ", tarif.Destination,tarif.Price);
             }
         }
 
@@ -142,16 +165,32 @@ namespace project
                 {
                     Console.Write("Введите направление грузоперевозки: ");
                     tarif.Destination = Console.ReadLine();
+                    if (tarif.Destination == "") throw new Exception();
+                }
+                catch
+                {
+                    Console.WriteLine("Направление не может быть пустой строкой!!!");
+                    Console.ReadLine();
+                    return;
+                }
+                try
+                {
                     Console.Write("Введите стоимость тарифа: ");
                     tarif.Price = double.Parse(Console.ReadLine());
+                    if (tarif.Price < 0) throw new Exception();
                 }
-                catch (Exception e)
+                catch
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Стоимость не может быть отрицательной!!!");
                     Console.ReadLine();
                     return;
                 }
                 tarifs.Add(tarif);
+                FileStream fs = new FileStream(Program.pathTarifs, FileMode.Append);
+                using (StreamWriter sw = new StreamWriter(fs, Encoding.Default))
+                {
+                    sw.WriteLine(tarif);
+                }
                 Console.WriteLine("Тариф успешно добавлен!");
             }
             Console.ReadLine();
@@ -175,6 +214,12 @@ namespace project
                     newTarif = tarif - money; // использование перегруженного бинарного -
                     tarifs.Remove(tarif);
                     tarifs.Add(newTarif);
+                    FileStream fs = new FileStream(Program.pathTarifs, FileMode.Create);
+                    using(StreamWriter sw = new StreamWriter(fs,Encoding.Default)){
+                        foreach(Tarif t in tarifs){
+                            sw.WriteLine(t);
+                        }
+                    }
                     Console.WriteLine("Тариф изменен!");
                     break;
                 }

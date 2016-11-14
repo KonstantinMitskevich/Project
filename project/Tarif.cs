@@ -11,14 +11,22 @@ namespace project
         string destination;
         double price;
 
+        public Tarif() { }
+
+        public Tarif(string destination, double price)
+        {
+            this.destination = destination;
+            this.price = price;
+        }
+
         public string Destination
         {
             get { return destination; }
             set
             {
-                if (value.Length > 2)
+               // if (value.Length > 3)
                     destination = value;
-                else throw new Exception("Неверный ввод направления перевозки");
+               // else throw new Exception("Неверный ввод направления перевозки");
             }
         }
         public double Price
@@ -34,7 +42,7 @@ namespace project
 
         public override string ToString()
         {
-            return String.Format("Направление: " + Destination + " Стоимость: " + Price + " руб");
+            return String.Format(Destination + " " + Price);
         }
 
         // перегруженный бинарный  оператор для уменьшения стоимости перевозки.

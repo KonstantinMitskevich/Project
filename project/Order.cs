@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace project
 {
-    class Order : FixedDiscount, ProcentDiscount
+    class Order
     {
         const double fixedDiscount = 100;
         const double percentDiscount = 10;
@@ -16,6 +16,17 @@ namespace project
         string destination;
         double price;
         double cargoWeight;
+
+        public Order(){}
+
+        public Order(int clientId, string clientName, string destination, double cargoWeight, double price)
+        {
+            this.ClientId = clientId;
+            this.clientName = clientName;
+            this.destination = destination;
+            this.price = price;
+            this.cargoWeight = cargoWeight;
+        }
 
         public double CargoWeight
         {
@@ -61,7 +72,7 @@ namespace project
 
         public override string ToString()
         {
-            return String.Format("Id клиента:" + ClientId + " Направление: " + Destination + "Груз:" + CargoWeight + "кг  Стоимость: " + Price + " руб");
+            return String.Format(ClientId + " " + clientName + " " + Destination + " " + CargoWeight + " " + Price);
         }
     }
 }
